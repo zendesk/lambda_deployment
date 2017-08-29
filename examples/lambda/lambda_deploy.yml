@@ -1,0 +1,3 @@
+# example of minimal default file for use with samson
+project: lambda-deploy  # required: name of lambda function
+file_name: example.zip  # required: zip or jar of lambda function and dependencies

@@ -1,0 +1,4 @@
+stacks:
+  us-west-2:
+    lambda-example:
+      template: lambda_example.rb

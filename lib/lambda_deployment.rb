@@ -1,0 +1,5 @@
+require 'lambda_deployment/cli'
+require 'lambda_deployment/client'
+require 'lambda_deployment/configuration'
+require 'lambda_deployment/lambda/deploy'
+require 'lambda_deployment/lambda/release'

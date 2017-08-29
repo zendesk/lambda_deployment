@@ -1,0 +1,6 @@
+# example of file for local use in the dev account
+project: lambda-deploy     # required: name of lambda function
+file_name: example.zip     # required: zip or jar of lambda function and dependencies
+region: us-west-2          # optional: specify aws region (override $AWS_REGION)
+s3_bucket: my-test-bucket  # optional: specify s3 bucket (override $LAMBDA_S3_BUCKET)
+s3_sse: AES256             # optional: set server side encryption on s3 objects

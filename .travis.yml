@@ -1,0 +1,13 @@
+language: ruby
+cache: bundler
+sudo: false
+branches:
+  only: master
+env:
+  global:
+  - AWS_ACCESS_KEY_ID=foobar123
+  - AWS_SECRET_ACCESS_KEY=foobar123
+rvm:
+- 2.2
+- 2.3
+- 2.4
