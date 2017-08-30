@@ -1,4 +1,3 @@
-require 'optparse'
 require 'lambda_deployment'
 
 module LambdaDeployment
@@ -33,7 +32,7 @@ module LambdaDeployment
       config_file = 'lambda_deploy.yml'
       OptionParser.new do |opts|
         opts.banner = 'Usage: lambda_deploy [-c FILE] deploy|release'
-        opts.version = Gem.loaded_specs['lambda_deployment'].version
+        opts.version = LambdaDeployment::VERSION
         opts.on('-c', '--config [FILE]', 'Use specified config file') { |c| config_file = c }
       end.parse!(args)
       @action = args.shift

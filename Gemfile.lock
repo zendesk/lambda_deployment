@@ -2,13 +2,13 @@ PATH
   remote: .
   specs:
     lambda_deployment (0.1.0)
-      aws-sdk-core
+      aws-sdk-core (~> 2)
 
 GEM
   remote: https://rubygems.org/
   specs:
     ast (2.3.0)
-    aws-sdk-core (2.10.31)
+    aws-sdk-core (2.10.35)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
     aws-sigv4 (1.0.1)
