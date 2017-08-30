@@ -3,7 +3,7 @@ Ruby gem for deploying lambda functions in AWS with Samson or another tool.
 **This gem is used to update the function code only** - the resources must
 already be provisioned using another tool (or manually).
 
-[![Build Status](https://travis-ci.com/zendesk/lambda_deployment.svg?token=8kxmjYYTYq1D9GQHxJyb&branch=master)](https://travis-ci.com/zendesk/lambda_deployment)
+[![Build Status](https://travis-ci.org/zendesk/lambda_deployment.svg?branch=master)](https://travis-ci.org/zendesk/lambda_deployment)
 
 ## Usage
 This gem provides a binary called `lambda_deploy` which will deploy a zip or
