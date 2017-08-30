@@ -1,6 +1,3 @@
-require 'aws-sdk-core'
-require 'securerandom'
-
 module LambdaDeployment
   class Client
     def initialize(region)

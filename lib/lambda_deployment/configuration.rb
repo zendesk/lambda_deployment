@@ -1,5 +1,3 @@
-require 'yaml'
-
 module LambdaDeployment
   class Configuration
     attr_reader :file_path, :project, :region, :s3_bucket, :s3_key, :s3_sse
