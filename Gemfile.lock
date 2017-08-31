@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lambda_deployment (0.1.0)
+    lambda_deployment (0.1.1)
       aws-sdk-core (~> 2)
 
 GEM
