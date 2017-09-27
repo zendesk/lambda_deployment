@@ -15,7 +15,7 @@ module LambdaDeployment
     end
 
     def alias_name
-      ENV.fetch('TAG', nil)
+      ENV['TAG'].to_s[/\d.*/]
     end
 
     private
