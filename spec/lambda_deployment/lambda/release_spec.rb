@@ -28,7 +28,7 @@ describe LambdaDeployment::Lambda::Release do
     it 'updates the production alias to the specified tag' do
       expect_any_instance_of(Aws::Lambda::Client).to receive(:get_alias).with(
         function_name: 'lambda-deploy',
-        name: 'v123'
+        name: '123'
       ).and_return(OpenStruct.new(function_version: 1))
       stub_update_alias(function_name: 'lambda-deploy', name: 'production', function_version: 1)
       described_class.new(@config).run

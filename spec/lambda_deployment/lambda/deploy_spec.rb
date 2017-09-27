@@ -34,7 +34,7 @@ describe LambdaDeployment::Lambda::Deploy do
       ).and_return(OpenStruct.new(version: 1))
       expect_any_instance_of(Aws::Lambda::Client).to receive(:create_alias).with(
         function_name: 'lambda-deploy',
-        name: 'v123',
+        name: '123',
         function_version: 1
       ).and_return(nil)
       described_class.new(@config).run
@@ -48,12 +48,12 @@ describe LambdaDeployment::Lambda::Deploy do
       ).and_return(OpenStruct.new(version: 1))
       expect_any_instance_of(Aws::Lambda::Client).to receive(:create_alias).with(
         function_name: 'lambda-deploy',
-        name: 'v123',
+        name: '123',
         function_version: 1
       ).and_raise(Aws::Lambda::Errors::ResourceConflictException.new(1, 2))
       expect_any_instance_of(Aws::Lambda::Client).to receive(:update_alias).with(
         function_name: 'lambda-deploy',
-        name: 'v123',
+        name: '123',
         function_version: 1
       )
       described_class.new(@config).run

@@ -15,7 +15,8 @@ module LambdaDeployment
     end
 
     def alias_name
-      ENV.fetch('TAG', nil)
+      tag = ENV.fetch('TAG', nil)
+      tag.match(/\d.*/)[0] unless tag.nil?
     end
 
     private
