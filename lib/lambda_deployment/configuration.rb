@@ -15,7 +15,9 @@ module LambdaDeployment
     end
 
     def alias_name
-      ENV['TAG'].to_s[/\d.*/]
+      # lambda aliases only allow select characters in the name so this strips them out
+      # Member must satisfy regular expression pattern: (?!^[0-9]+$)([a-zA-Z0-9-_]+)
+      ENV['TAG'].to_s.gsub(/[^\da-zA-Z\-_]/, '')[/([0-9]+)([a-zA-Z0-9\-_]+)/]
     end
 
     private
