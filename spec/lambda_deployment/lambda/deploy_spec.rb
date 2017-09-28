@@ -58,5 +58,24 @@ describe LambdaDeployment::Lambda::Deploy do
       )
       described_class.new(@config).run
     end
+
+    it 'uploads a new version and creates an alias with removed characters' do
+      original = ENV.to_h
+      ENV['TAG'] = 'v1.2.3'
+      @config = LambdaDeployment::Configuration.new
+      @config.load_config('examples/lambda/lambda_deploy_dev.yml')
+      stub_s3_put('v1.2.3')
+      stub_update_function('v1.2.3')
+      expect_any_instance_of(Aws::Lambda::Client).to receive(:publish_version).with(
+        function_name: 'lambda-deploy'
+      ).and_return(OpenStruct.new(version: 1))
+      expect_any_instance_of(Aws::Lambda::Client).to receive(:create_alias).with(
+        function_name: 'lambda-deploy',
+        name: '123',
+        function_version: 1
+      ).and_return(nil)
+      described_class.new(@config).run
+      ENV.replace(original)
+    end
   end
 end
