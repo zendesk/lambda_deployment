@@ -48,6 +48,14 @@ module HelperMethods
       s3_key: "example-#{version}.zip"
     ).and_return(nil)
   end
+
+  def with_env(env)
+    old = ENV.to_h
+    env.each { |k, v| ENV[k.to_s] = v }
+    yield
+  ensure
+    ENV.replace(old)
+  end
 end
 
 RSpec.configure do |c|

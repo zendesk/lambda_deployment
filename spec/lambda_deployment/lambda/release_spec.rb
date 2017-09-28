@@ -16,13 +16,10 @@ describe LambdaDeployment::Lambda::Release do
   end
 
   context 'works with a tag alias' do
-    around do |t|
-      original = ENV.to_h
-      ENV['TAG'] = 'v123'
+    around { |t| with_env(TAG: 'v123', &t) }
+    before do
       @config = LambdaDeployment::Configuration.new
       @config.load_config('examples/lambda/lambda_deploy_dev.yml')
-      t.run
-      ENV.replace(original)
     end
 
     it 'updates the production alias to the specified tag' do
