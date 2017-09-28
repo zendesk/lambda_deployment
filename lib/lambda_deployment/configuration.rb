@@ -15,7 +15,7 @@ module LambdaDeployment
     end
 
     def alias_name
-      ENV['TAG'].to_s[/\d.*/]
+      ENV['TAG'].to_s.gsub(/[^\da-zA-Z\-_]/, '')[/([0-9]+)([a-zA-Z0-9\-_]+)/]
     end
 
     private
