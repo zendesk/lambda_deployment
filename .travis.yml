@@ -7,6 +7,13 @@ env:
   global:
   - AWS_ACCESS_KEY_ID=foobar123
   - AWS_SECRET_ACCESS_KEY=foobar123
+script: bundle exec rake $TASK
+env:
+  global: $TASK=spec
+matrix:
+  include:
+    env: $TASK=rubocop
+    rvm: 2.4
 rvm:
 - 2.2
 - 2.3
