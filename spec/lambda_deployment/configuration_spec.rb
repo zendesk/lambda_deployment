@@ -38,17 +38,18 @@ describe LambdaDeployment::Configuration do
 
   context 'it loads the configuration from env' do
     around do |t|
-      original = ENV.to_h
-      {
-        'AWS_REGION' => 'us-west-2',
-        'LAMBDA_S3_BUCKET' => 'my-test-bucket-2',
-        'LAMBDA_S3_SSE' => 'AES256',
-        'TAG' => 'v123'
-      }.each { |k, v| ENV[k] = v }
+      with_env(
+        AWS_REGION: 'us-west-2',
+        LAMBDA_S3_BUCKET: 'my-test-bucket-2',
+        LAMBDA_S3_SSE: 'AES256',
+        TAG: 'v123',
+        &t
+      )
+    end
+
+    before do
       @config = described_class.new
       @config.load_config('examples/lambda/lambda_deploy.yml')
-      t.run
-      ENV.replace(original)
     end
 
     it 'sets the project name' do

@@ -17,13 +17,11 @@ describe LambdaDeployment::Lambda::Deploy do
   end
 
   context 'works with a tag alias' do
-    around do |t|
-      original = ENV.to_h
-      ENV['TAG'] = 'v123'
+    around { |t| with_env(TAG: 'v123', &t) }
+
+    before do
       @config = LambdaDeployment::Configuration.new
       @config.load_config('examples/lambda/lambda_deploy_dev.yml')
-      t.run
-      ENV.replace(original)
     end
 
     it 'uploads a new version and creates an alias' do
@@ -60,22 +58,21 @@ describe LambdaDeployment::Lambda::Deploy do
     end
 
     it 'uploads a new version and creates an alias with removed characters' do
-      original = ENV.to_h
-      ENV['TAG'] = 'v1.2.3'
-      @config = LambdaDeployment::Configuration.new
-      @config.load_config('examples/lambda/lambda_deploy_dev.yml')
-      stub_s3_put('v1.2.3')
-      stub_update_function('v1.2.3')
-      expect_any_instance_of(Aws::Lambda::Client).to receive(:publish_version).with(
-        function_name: 'lambda-deploy'
-      ).and_return(OpenStruct.new(version: 1))
-      expect_any_instance_of(Aws::Lambda::Client).to receive(:create_alias).with(
-        function_name: 'lambda-deploy',
-        name: '123',
-        function_version: 1
-      ).and_return(nil)
-      described_class.new(@config).run
-      ENV.replace(original)
+      with_env TAG: 'v1.2.3' do
+        @config = LambdaDeployment::Configuration.new
+        @config.load_config('examples/lambda/lambda_deploy_dev.yml')
+        stub_s3_put('v1.2.3')
+        stub_update_function('v1.2.3')
+        expect_any_instance_of(Aws::Lambda::Client).to receive(:publish_version).with(
+          function_name: 'lambda-deploy'
+        ).and_return(OpenStruct.new(version: 1))
+        expect_any_instance_of(Aws::Lambda::Client).to receive(:create_alias).with(
+          function_name: 'lambda-deploy',
+          name: '123',
+          function_version: 1
+        ).and_return(nil)
+        described_class.new(@config).run
+      end
     end
   end
 end
