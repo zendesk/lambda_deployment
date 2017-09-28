@@ -96,4 +96,28 @@ describe LambdaDeployment::Configuration do
       )
     end
   end
+
+  describe '#alias_name' do
+    def name(tag)
+      with_env TAG: tag do
+        LambdaDeployment::Configuration.new.alias_name
+      end
+    end
+
+    it 'ignores unset' do
+      expect(name(nil)).to eq nil
+    end
+
+    it 'leaves nice names alone' do
+      expect(name('foo')).to eq 'foo'
+    end
+
+    it 'coverts pure numbers' do
+      expect(name('~212')).to eq 'v212'
+    end
+
+    it 'leaves names with numbers' do
+      expect(name('V1.2.3.beta')).to eq 'V123beta'
+    end
+  end
 end

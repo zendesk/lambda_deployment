@@ -14,10 +14,12 @@ module LambdaDeployment
       @s3_sse = config.fetch('s3_sse', ENV.fetch('LAMBDA_S3_SSE', nil))
     end
 
+    # lambda aliases must satisfy (?!^[0-9]+$)([a-zA-Z0-9-_]+)
     def alias_name
-      # lambda aliases only allow select characters in the name so this strips them out
-      # Member must satisfy regular expression pattern: (?!^[0-9]+$)([a-zA-Z0-9-_]+)
-      ENV['TAG'].to_s.gsub(/[^\da-zA-Z\-_]/, '')[/([0-9]+)([a-zA-Z0-9\-_]+)/]
+      tag = ENV['TAG'].to_s.gsub(/[^a-zA-Z0-9\-_]/, '')
+      return nil if tag.empty?
+      tag.prepend 'v' if tag =~ /^[0-9]+$/ # just a number like 123 so lets turn it into v123
+      tag
     end
 
     private
