@@ -4,6 +4,7 @@ require 'single_cov'
 SingleCov.setup :rspec
 
 require 'lambda_deployment'
+require 'tempfile'
 
 module HelperMethods
   def create_temp_config(content)
