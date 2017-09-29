@@ -16,4 +16,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop'
   s.add_development_dependency 'single_cov'
   s.add_development_dependency 'bump'
+  s.add_development_dependency 'forking_test_runner'
 end

@@ -5,5 +5,9 @@ require 'rubocop/rake_task'
 require 'bump/tasks'
 
 RuboCop::RakeTask.new
-RSpec::Core::RakeTask.new
-task default: %i[rubocop spec]
+
+task :atomic_spec do
+  sh 'bundle exec forking-test-runner spec --rspec --merge-coverage --quiet'
+end
+
+task default: %i[rubocop atomic_spec]
