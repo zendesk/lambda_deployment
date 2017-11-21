@@ -85,9 +85,7 @@ describe LambdaDeployment::Configuration do
 
   context 'it loads environment vars from .env files' do
     before do
-      File.open('.env.test', 'w') do |file|
-        file.write 'BAZ=qux'
-      end
+      File.write '.env.test', 'BAZ=qux'
       @config = described_class.new
       @config.load_config('examples/lambda/lambda_deploy_dev.yml')
     end
