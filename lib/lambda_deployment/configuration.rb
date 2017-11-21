@@ -1,25 +1,8 @@
+require 'dotenv'
+
 module LambdaDeployment
   class Configuration
     attr_reader :file_path, :project, :region, :s3_bucket, :s3_key, :s3_sse
-
-    # https://github.com/bkeepers/dotenv/blob/a47020f6c414e0a577680b324e61876a690d2200/lib/dotenv/parser.rb#L14
-    LINE_RE = /
-      \A
-      \s*
-      (?:export\s+)?    # optional export
-      ([\w\.]+)         # key
-      (?:\s*=\s*|:\s+?) # separator
-      (                 # optional value begin
-        '(?:\'|[^'])*'  #   single quoted value
-        |               #   or
-        "(?:\"|[^"])*"  #   double quoted value
-        |               #   or
-        [^#\n]+         #   unquoted value
-      )?                # value end
-      \s*
-      (?:\#.*)?         # optional comment
-      \z
-    /x
 
     def load_config(config_file)
       config = YAML.load_file(config_file)
@@ -44,7 +27,7 @@ module LambdaDeployment
     end
 
     def environment
-      @environment ||= calculate_environment_vars
+      @environment_cache ||= @config_env.merge(Dotenv.overload(*Dir.glob('.env*')))
     end
 
     private
@@ -53,18 +36,6 @@ module LambdaDeployment
       basename = File.basename(file_name, '.*')
       extension = File.extname(file_name)
       "#{basename}-#{ENV.fetch('TAG', 'latest')}#{extension}"
-    end
-
-    def calculate_environment_vars
-      Dir.glob('.env.*') do |filename|
-        File.open(filename).each do |line|
-          if (match = line.match(LINE_RE))
-            key, value = match.captures
-            @config_env[key] = value.strip
-          end
-        end
-      end
-      @config_env
     end
   end
 end
