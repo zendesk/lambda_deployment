@@ -50,6 +50,13 @@ module HelperMethods
     ).and_return(nil)
   end
 
+  def stub_update_function_configuration(env)
+    expect_any_instance_of(Aws::Lambda::Client).to receive(:update_function_configuration).with(
+      function_name: 'lambda-deploy',
+      environment: { variables: env }
+    ).and_return(nil)
+  end
+
   def with_env(env)
     old = ENV.to_h
     env.each { |k, v| ENV[k.to_s] = v }

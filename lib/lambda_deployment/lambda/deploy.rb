@@ -9,6 +9,7 @@ module LambdaDeployment
       def run
         upload_to_s3
         update_function_code
+        update_environment
         return unless @config.alias_name
         version = publish_version
         begin
@@ -34,6 +35,15 @@ module LambdaDeployment
           function_name: @config.project,
           s3_bucket: @config.s3_bucket,
           s3_key: @config.s3_key
+        )
+      end
+
+      def update_environment
+        @client.lambda_client.update_function_configuration(
+          function_name: @config.project,
+          environment: {
+            variables: @config.environment
+          }
         )
       end
 

@@ -12,6 +12,7 @@ describe LambdaDeployment::Lambda::Deploy do
     it 'uploads a new version' do
       stub_s3_put('latest')
       stub_update_function('latest')
+      stub_update_function_configuration('FOO' => 'bar')
       described_class.new(@config).run
     end
   end
@@ -22,6 +23,7 @@ describe LambdaDeployment::Lambda::Deploy do
     before do
       @config = LambdaDeployment::Configuration.new
       @config.load_config('examples/lambda/lambda_deploy_dev.yml')
+      stub_update_function_configuration('FOO' => 'bar')
     end
 
     it 'uploads a new version and creates an alias' do
