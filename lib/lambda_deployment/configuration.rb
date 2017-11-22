@@ -27,7 +27,7 @@ module LambdaDeployment
     end
 
     def environment
-      @environment_cache ||= @config_env.merge(Dotenv.overload(*Dir.glob('.env*')))
+      @environment_cache ||= Dotenv.overload(*Dir.glob('.env*')).merge(@config_env)
     end
 
     private
