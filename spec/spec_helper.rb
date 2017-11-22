@@ -53,6 +53,7 @@ module HelperMethods
   def stub_update_function_configuration(env)
     expect_any_instance_of(Aws::Lambda::Client).to receive(:update_function_configuration).with(
       function_name: 'lambda-deploy',
+      kms_key_arn: '',
       environment: { variables: env }
     ).and_return(nil)
   end

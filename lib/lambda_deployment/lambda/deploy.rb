@@ -41,6 +41,7 @@ module LambdaDeployment
       def update_environment
         @client.lambda_client.update_function_configuration(
           function_name: @config.project,
+          kms_key_arn: '',
           environment: {
             variables: @config.environment
           }
