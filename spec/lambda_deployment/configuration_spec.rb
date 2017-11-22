@@ -37,6 +37,7 @@ describe LambdaDeployment::Configuration do
 
     it 'loads the environment variables' do
       expect(@config.environment).to eq('FOO' => 'bar')
+      expect(ENV['FOO']).to eq(nil)
     end
   end
 
@@ -96,6 +97,7 @@ describe LambdaDeployment::Configuration do
 
     it 'loads the environment from both YAML and .env' do
       expect(@config.environment).to eq('FOO' => 'bar', 'BAZ' => 'qux')
+      expect(ENV['FOO']).to eq(nil)
     end
   end
 
