@@ -9,6 +9,7 @@ module LambdaDeployment
       def run
         upload_to_s3
         update_function_code
+        update_environment
         return unless @config.alias_name
         version = publish_version
         begin
@@ -34,6 +35,28 @@ module LambdaDeployment
           function_name: @config.project,
           s3_bucket: @config.s3_bucket,
           s3_key: @config.s3_key
+        )
+      end
+
+      def update_environment
+        environment = {}
+        @config.environment.map { |k, v| environment[k] = encrypt(v) }
+        @client.lambda_client.update_function_configuration(
+          function_name: @config.project,
+          kms_key_arn: @config.kms_key_arn,
+          environment: {
+            variables: environment
+          }
+        )
+      end
+
+      def encrypt(value)
+        return value unless @config.kms_key_arn
+        Base64.encode64(
+          @client.kms_client.encrypt(
+            key_id: @config.kms_key_arn,
+            plaintext: value
+          ).ciphertext_blob
         )
       end
 

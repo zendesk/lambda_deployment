@@ -34,6 +34,11 @@ describe LambdaDeployment::Configuration do
     it 'configures server side encryption' do
       expect(@config.s3_sse).to eq('AES256')
     end
+
+    it 'loads the environment variables' do
+      expect(@config.environment).to eq('FOO' => 'bar')
+      expect(ENV['FOO']).to eq(nil)
+    end
   end
 
   context 'it loads the configuration from env' do
@@ -76,6 +81,23 @@ describe LambdaDeployment::Configuration do
 
     it 'configures server side encryption' do
       expect(@config.s3_sse).to eq('AES256')
+    end
+  end
+
+  context 'it loads environment vars from .env files' do
+    before do
+      File.write '.env.test', 'BAZ=qux'
+      @config = described_class.new
+      @config.load_config('examples/lambda/lambda_deploy_dev.yml')
+    end
+
+    after do
+      File.delete '.env.test'
+    end
+
+    it 'loads the environment from both YAML and .env' do
+      expect(@config.environment).to eq('FOO' => 'bar', 'BAZ' => 'qux')
+      expect(ENV['FOO']).to eq(nil)
     end
   end
 

@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.executables = ['lambda_deploy']
 
   s.add_runtime_dependency 'aws-sdk-core', '~> 2'
+  s.add_runtime_dependency 'dotenv', '~> 2'
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rubocop'
