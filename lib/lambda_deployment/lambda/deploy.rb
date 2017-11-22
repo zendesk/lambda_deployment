@@ -39,12 +39,24 @@ module LambdaDeployment
       end
 
       def update_environment
+        environment = {}
+        @config.environment.map { |k, v| environment[k] = encrypt(v) }
         @client.lambda_client.update_function_configuration(
           function_name: @config.project,
-          kms_key_arn: '',
+          kms_key_arn: @config.kms_key_arn,
           environment: {
-            variables: @config.environment
+            variables: environment
           }
+        )
+      end
+
+      def encrypt(value)
+        return value unless @config.kms_key_arn
+        Base64.encode64(
+          @client.kms_client.encrypt(
+            key_id: @config.kms_key_arn,
+            plaintext: value
+          ).ciphertext_blob
         )
       end
 

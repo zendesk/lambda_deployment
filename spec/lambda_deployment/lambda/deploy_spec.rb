@@ -77,4 +77,22 @@ describe LambdaDeployment::Lambda::Deploy do
       end
     end
   end
+
+  context 'with a specified kms key' do
+    around { |t| with_env(LAMBDA_KMS_KEY_ARN: 'foobar-key-123', &t) }
+
+    it 'encrypts environment variables' do
+      @config = LambdaDeployment::Configuration.new
+      @config.load_config('examples/lambda/lambda_deploy_dev.yml')
+      stub_s3_put('latest')
+      stub_update_function('latest')
+      expect_any_instance_of(Aws::KMS::Client).to receive(:encrypt).with(
+        key_id: 'foobar-key-123',
+        plaintext: 'bar'
+      ).and_return(OpenStruct.new(ciphertext_blob: 'bar-encrypted'))
+      expect(Base64).to receive(:encode64).with('bar-encrypted').and_return('bar-encoded')
+      stub_update_function_configuration({ 'FOO' => 'bar' }, 'foobar-key-123')
+      described_class.new(@config).run
+    end
+  end
 end

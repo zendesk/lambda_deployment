@@ -2,7 +2,7 @@ require 'dotenv'
 
 module LambdaDeployment
   class Configuration
-    attr_reader :file_path, :project, :region, :s3_bucket, :s3_key, :s3_sse
+    attr_reader :kms_key_arn, :file_path, :project, :region, :s3_bucket, :s3_key, :s3_sse
 
     def load_config(config_file)
       config = YAML.load_file(config_file)
@@ -16,6 +16,7 @@ module LambdaDeployment
       @s3_sse = config.fetch('s3_sse', ENV.fetch('LAMBDA_S3_SSE', nil))
 
       @config_env = config.fetch('environment', {})
+      @kms_key_arn = config.fetch('kms_key_arn', ENV.fetch('LAMBDA_KMS_KEY_ARN', nil))
     end
 
     # lambda aliases must satisfy (?!^[0-9]+$)([a-zA-Z0-9-_]+)

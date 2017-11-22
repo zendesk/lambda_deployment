@@ -8,6 +8,10 @@ describe LambdaDeployment::Client do
 
   let(:client) { described_class.new('us-east-1') }
 
+  it 'builds a client for kms' do
+    expect(client.kms_client).to be_a(Aws::KMS::Client)
+  end
+
   it 'builds a client for lambda' do
     expect(client.lambda_client).to be_a(Aws::Lambda::Client)
   end

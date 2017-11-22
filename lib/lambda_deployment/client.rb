@@ -4,6 +4,10 @@ module LambdaDeployment
       @region = region
     end
 
+    def kms_client
+      @kms_client ||= Aws::KMS::Client.new(config)
+    end
+
     def lambda_client
       @lambda_client ||= Aws::Lambda::Client.new(config)
     end
