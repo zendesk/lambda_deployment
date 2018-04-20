@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lambda_deployment (0.2.0)
+    lambda_deployment (0.3.0)
       aws-sdk-kms
       aws-sdk-lambda
       aws-sdk-s3
