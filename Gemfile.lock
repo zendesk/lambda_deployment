@@ -2,55 +2,68 @@ PATH
   remote: .
   specs:
     lambda_deployment (0.2.0)
-      aws-sdk-core (~> 2)
+      aws-sdk-kms
+      aws-sdk-lambda
+      aws-sdk-s3
       dotenv (~> 2)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    ast (2.3.0)
-    aws-sdk-core (2.10.35)
+    ast (2.4.0)
+    aws-partitions (1.80.0)
+    aws-sdk-core (3.19.0)
+      aws-partitions (~> 1.0)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
+    aws-sdk-kms (1.5.0)
+      aws-sdk-core (~> 3)
+      aws-sigv4 (~> 1.0)
+    aws-sdk-lambda (1.5.0)
+      aws-sdk-core (~> 3)
+      aws-sigv4 (~> 1.0)
+    aws-sdk-s3 (1.9.1)
+      aws-sdk-core (~> 3)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.0)
     aws-sigv4 (1.0.2)
-    bump (0.5.4)
+    bump (0.6.0)
     diff-lcs (1.3)
-    dotenv (2.2.1)
-    forking_test_runner (1.1.0)
+    dotenv (2.3.0)
+    forking_test_runner (1.2.0)
       parallel_tests (>= 1.3.7)
-    jmespath (1.3.1)
-    parallel (1.12.0)
-    parallel_tests (2.16.0)
+    jmespath (1.4.0)
+    parallel (1.12.1)
+    parallel_tests (2.21.3)
       parallel
-    parser (2.4.0.0)
-      ast (~> 2.2)
+    parser (2.5.1.0)
+      ast (~> 2.4.0)
     powerpack (0.1.1)
-    rainbow (2.2.2)
-      rake
-    rake (12.0.0)
-    rspec (3.6.0)
-      rspec-core (~> 3.6.0)
-      rspec-expectations (~> 3.6.0)
-      rspec-mocks (~> 3.6.0)
-    rspec-core (3.6.0)
-      rspec-support (~> 3.6.0)
-    rspec-expectations (3.6.0)
+    rainbow (3.0.0)
+    rake (12.3.1)
+    rspec (3.7.0)
+      rspec-core (~> 3.7.0)
+      rspec-expectations (~> 3.7.0)
+      rspec-mocks (~> 3.7.0)
+    rspec-core (3.7.1)
+      rspec-support (~> 3.7.0)
+    rspec-expectations (3.7.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.6.0)
-    rspec-mocks (3.6.0)
+      rspec-support (~> 3.7.0)
+    rspec-mocks (3.7.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.6.0)
-    rspec-support (3.6.0)
-    rubocop (0.49.1)
+      rspec-support (~> 3.7.0)
+    rspec-support (3.7.1)
+    rubocop (0.55.0)
       parallel (~> 1.10)
-      parser (>= 2.3.3.1, < 3.0)
+      parser (>= 2.5)
       powerpack (~> 0.1)
-      rainbow (>= 1.99.1, < 3.0)
+      rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
-    ruby-progressbar (1.8.1)
-    single_cov (0.7.0)
-    unicode-display_width (1.3.0)
+    ruby-progressbar (1.9.0)
+    single_cov (1.0.1)
+    unicode-display_width (1.3.2)
 
 PLATFORMS
   ruby
@@ -59,9 +72,10 @@ DEPENDENCIES
   bump
   forking_test_runner
   lambda_deployment!
+  rake
   rspec
   rubocop
   single_cov
 
 BUNDLED WITH
-   1.15.4
+   1.16.1
