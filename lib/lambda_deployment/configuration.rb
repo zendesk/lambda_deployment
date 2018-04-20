@@ -28,8 +28,8 @@ module LambdaDeployment
     end
 
     def environment
-      @environment_cache ||= Dir.glob('.env*').reduce({}) do |cache, filename|
-        cache.merge Dotenv::Environment.new(filename)
+      @environment ||= Dir.glob('.env*').reduce({}) do |cache, filename|
+        cache.merge Dotenv::Environment.new(filename, true)
       end.merge(@config_env)
     end
 

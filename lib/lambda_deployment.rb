@@ -1,4 +1,6 @@
-require 'aws-sdk-core'
+require 'aws-sdk-kms'
+require 'aws-sdk-lambda'
+require 'aws-sdk-s3'
 require 'optparse'
 require 'securerandom'
 require 'yaml'
