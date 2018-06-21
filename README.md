@@ -66,6 +66,7 @@ project: my-dev-lambda-name   # required: name of lambda function
 region: us-east-1             # optional: specify AWS region (will override $AWS_REGION)
 s3_bucket: my-test-bucket     # optional: specify s3 bucket (will override $LAMBDA_S3_BUCKET)
 s3_sse: AES256                # optional: set server side encryption on s3 objects (will override $LAMBDA_S3_SSE)
+concurrency:                  # optional: set reserved concurrency limit (-1 to delete)
 environment:
   FOO: bar                    # optional: set some env vars for your Lambda
 ```

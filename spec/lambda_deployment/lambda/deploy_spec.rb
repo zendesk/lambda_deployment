@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-SingleCov.covered!
+SingleCov.covered! uncovered: 3
 
 describe LambdaDeployment::Lambda::Deploy do
   context 'works without a tag alias' do

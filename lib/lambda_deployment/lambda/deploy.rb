@@ -10,6 +10,7 @@ module LambdaDeployment
         upload_to_s3
         update_function_code
         update_environment
+        update_concurrency
         return unless @config.alias_name
         version = publish_version
         begin
@@ -36,6 +37,19 @@ module LambdaDeployment
           s3_bucket: @config.s3_bucket,
           s3_key: @config.s3_key
         )
+      end
+
+      def update_concurrency
+        return unless @config.concurrency
+        # Allow a value of -1 to remove concurrency limit
+        if @config.concurrency == -1
+          @client.delete_function_concurrency(function_name: @config.project)
+        else
+          @client.put_function_concurrency(
+            function_name: @config.project,
+            reserved_concurrent_executions: @config.concurrency
+          )
+        end
       end
 
       def update_environment
