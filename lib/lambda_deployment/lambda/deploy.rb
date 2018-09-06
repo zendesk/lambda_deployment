@@ -43,9 +43,9 @@ module LambdaDeployment
         return unless @config.concurrency
         # Allow a value of -1 to remove concurrency limit
         if @config.concurrency == -1
-          @client.delete_function_concurrency(function_name: @config.project)
+          @client.lambda_client.delete_function_concurrency(function_name: @config.project)
         else
-          @client.put_function_concurrency(
+          @client.lambda_client.put_function_concurrency(
             function_name: @config.project,
             reserved_concurrent_executions: @config.concurrency
           )
