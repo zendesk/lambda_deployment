@@ -1,4 +1,5 @@
 *.gem
 *.rbc
 .bundle
+.byebug_history
 */Gemfile.lock
