@@ -1,6 +1,8 @@
 module LambdaDeployment
   module Lambda
     class Deploy
+      class ArchiveMissingError < StandardError ; end
+
       def initialize(config)
         @config = config
         @client = LambdaDeployment::Client.new(config.region)
@@ -22,7 +24,13 @@ module LambdaDeployment
 
       private
 
+      def upload_code_to_s3?
+        @config.file_path && File.exist?(@config.file_path)
+      end
+
       def upload_to_s3
+        return unless upload_code_to_s3?
+
         @client.s3_client.put_object(
           body: File.read(@config.file_path),
           bucket: @config.s3_bucket,
@@ -31,7 +39,20 @@ module LambdaDeployment
         )
       end
 
+      def code_exists_on_s3?
+        @client.s3_client.head_object(
+          bucket: @config.s3_bucket,
+          key: @config.s3_key
+        )
+
+        true
+      rescue Aws::S3::Errors::NotFound
+        false
+      end
+
       def update_function_code
+        raise ArchiveMissingError unless code_exists_on_s3?
+
         @client.lambda_client.update_function_code(
           function_name: @config.project,
           s3_bucket: @config.s3_bucket,

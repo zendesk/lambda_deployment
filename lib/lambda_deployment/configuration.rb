@@ -8,12 +8,13 @@ module LambdaDeployment
       config = YAML.load_file(config_file)
       @project = config.fetch('project')
       @region = config.fetch('region', ENV.fetch('AWS_REGION', nil))
-      @file_path = File.expand_path(config.fetch('file_name'), File.dirname(config_file))
-      raise "File not found: #{@file_path}" unless File.exist?(@file_path)
 
-      @s3_bucket = config.fetch('s3_bucket', ENV.fetch('LAMBDA_S3_BUCKET', nil))
       @s3_key = s3_key_name(config.fetch('file_name'))
+      @s3_bucket = config.fetch('s3_bucket', ENV.fetch('LAMBDA_S3_BUCKET', nil))
       @s3_sse = config.fetch('s3_sse', ENV.fetch('LAMBDA_S3_SSE', nil))
+
+      @file_path = File.expand_path(config.fetch('file_name'), File.dirname(config_file))
+      @file_path = nil unless File.exist?(@file_path)
 
       @config_env = config.fetch('environment', {})
       @kms_key_arn = config.fetch('kms_key_arn', ENV.fetch('LAMBDA_KMS_KEY_ARN', nil))

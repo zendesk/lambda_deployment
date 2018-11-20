@@ -11,6 +11,7 @@ describe LambdaDeployment::Lambda::Deploy do
 
     it 'uploads a new version' do
       stub_s3_put('latest')
+      stub_head_object('latest')
       stub_update_function('latest')
       stub_update_function_configuration('FOO' => 'bar')
       described_class.new(@config).run
@@ -28,6 +29,7 @@ describe LambdaDeployment::Lambda::Deploy do
 
     it 'uploads a new version and creates an alias' do
       stub_s3_put('v123')
+      stub_head_object('v123')
       stub_update_function('v123')
       expect_any_instance_of(Aws::Lambda::Client).to receive(:publish_version).with(
         function_name: 'lambda-deploy'
@@ -42,6 +44,7 @@ describe LambdaDeployment::Lambda::Deploy do
 
     it 'updates the alias if it already exists' do
       stub_s3_put('v123')
+      stub_head_object('v123')
       stub_update_function('v123')
       expect_any_instance_of(Aws::Lambda::Client).to receive(:publish_version).with(
         function_name: 'lambda-deploy'
@@ -64,6 +67,7 @@ describe LambdaDeployment::Lambda::Deploy do
         @config = LambdaDeployment::Configuration.new
         @config.load_config('examples/lambda/lambda_deploy_dev.yml')
         stub_s3_put('v1.2.3')
+        stub_head_object('v1.2.3')
         stub_update_function('v1.2.3')
         expect_any_instance_of(Aws::Lambda::Client).to receive(:publish_version).with(
           function_name: 'lambda-deploy'
@@ -85,6 +89,7 @@ describe LambdaDeployment::Lambda::Deploy do
       @config = LambdaDeployment::Configuration.new
       @config.load_config('examples/lambda/lambda_deploy_dev.yml')
       stub_s3_put('latest')
+      stub_head_object('latest')
       stub_update_function('latest')
       expect_any_instance_of(Aws::KMS::Client).to receive(:encrypt).with(
         key_id: 'foobar-key-123',
@@ -92,6 +97,37 @@ describe LambdaDeployment::Lambda::Deploy do
       ).and_return(OpenStruct.new(ciphertext_blob: 'bar-encrypted'))
       expect(Base64).to receive(:encode64).with('bar-encrypted').and_return('bar-encoded')
       stub_update_function_configuration({ 'FOO' => 'bar' }, 'foobar-key-123')
+      described_class.new(@config).run
+    end
+  end
+
+  context 'without an archive uploaded to s3' do
+    before do
+      @config = LambdaDeployment::Configuration.new
+      @config.load_config('examples/lambda/lambda_deploy_dev.yml')
+    end
+
+    it 'raise an exception' do
+      expect_any_instance_of(Aws::S3::Client)
+        .to receive(:head_object)
+        .and_raise(Aws::S3::Errors::NotFound.new(nil, nil))
+
+      stub_s3_put('latest')
+      expect { described_class.new(@config).run }
+        .to raise_error(LambdaDeployment::Lambda::Deploy::ArchiveMissingError)
+    end
+  end
+
+  context 'without an archive to upload' do
+    before do
+      @config = LambdaDeployment::Configuration.new
+      @config.load_config('examples/lambda-without-zip/lambda_deploy_dev.yml')
+    end
+
+    it 'skips the upload and proceeds' do
+      stub_head_object('latest')
+      stub_update_function('latest')
+      stub_update_function_configuration('FOO' => 'bar')
       described_class.new(@config).run
     end
   end

@@ -14,8 +14,10 @@ lambda_deploy [-c path/to/configuration.yml] deploy|release
 ```
 
 ### Deploy action
-The deploy action will upload the function to S3, and update the function to
-use the new code. If the environmental variable `TAG` is set it will also
+The deploy action will optionally upload the function to S3 if a zip/jar file is configured.
+If no file is provided then the script will assume that it was already uploaded to S3 by some
+other mean (GCR build for instance) and proceed with the update. It will then update the
+function to use the new code. If the environmental variable `TAG` is set it will also
 create a version and link that version to an alias named `TAG`.
 
 ### Release action
@@ -71,7 +73,8 @@ environment:
   FOO: bar                    # optional: set some env vars for your Lambda
 ```
 
-* *file_name* is a path relative to the configuration file
+* *file_name* is the key that will be used to store the code archive on S3. If the code needs to be uploaded
+as part of the deploy process, the file_name needs to be the path relative to the configuration file
 * *project* must match the function name in the AWS console (the last value in
 the following example):
 ```
