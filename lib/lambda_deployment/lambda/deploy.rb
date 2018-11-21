@@ -24,12 +24,8 @@ module LambdaDeployment
 
       private
 
-      def upload_code_to_s3?
-        @config.file_path && File.exist?(@config.file_path)
-      end
-
       def upload_to_s3
-        return unless upload_code_to_s3?
+        return if @config.skip_upload
 
         @client.s3_client.put_object(
           body: File.read(@config.file_path),

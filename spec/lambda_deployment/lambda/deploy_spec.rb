@@ -119,12 +119,15 @@ describe LambdaDeployment::Lambda::Deploy do
   end
 
   context 'without an archive to upload' do
+    around { |t| with_env(SKIP_UPLOAD: 'true', &t) }
+
     before do
       @config = LambdaDeployment::Configuration.new
       @config.load_config('examples/lambda-without-zip/lambda_deploy_dev.yml')
     end
 
     it 'skips the upload and proceeds' do
+      expect_any_instance_of(Aws::S3::Client).not_to receive(:put_object)
       stub_head_object('latest')
       stub_update_function('latest')
       stub_update_function_configuration('FOO' => 'bar')
