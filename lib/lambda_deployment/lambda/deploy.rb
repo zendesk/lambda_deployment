@@ -47,7 +47,7 @@ module LambdaDeployment
       end
 
       def update_function_code
-        raise ArchiveMissingError unless code_exists_on_s3?
+        raise ArchiveMissingError.new("Could not find an archive on #{@config.s3_bucket} with the key #{@config.s3_key}") unless code_exists_on_s3?
 
         @client.lambda_client.update_function_code(
           function_name: @config.project,
