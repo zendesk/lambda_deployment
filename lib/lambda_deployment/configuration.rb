@@ -2,18 +2,22 @@ require 'dotenv'
 
 module LambdaDeployment
   class Configuration
-    attr_reader :concurrency, :kms_key_arn, :file_path, :project, :region, :s3_bucket, :s3_key, :s3_sse
+    attr_reader :concurrency, :kms_key_arn, :file_path, :project, :region, :s3_bucket, :s3_key, :s3_sse, :skip_upload
 
     def load_config(config_file)
       config = YAML.load_file(config_file)
+      @skip_upload = ENV.fetch('SKIP_UPLOAD', 'false') == 'true'
       @project = config.fetch('project')
       @region = config.fetch('region', ENV.fetch('AWS_REGION', nil))
-      @file_path = File.expand_path(config.fetch('file_name'), File.dirname(config_file))
-      raise "File not found: #{@file_path}" unless File.exist?(@file_path)
 
-      @s3_bucket = config.fetch('s3_bucket', ENV.fetch('LAMBDA_S3_BUCKET', nil))
       @s3_key = s3_key_name(config.fetch('file_name'))
+      @s3_bucket = config.fetch('s3_bucket', ENV.fetch('LAMBDA_S3_BUCKET', nil))
       @s3_sse = config.fetch('s3_sse', ENV.fetch('LAMBDA_S3_SSE', nil))
+
+      unless @skip_upload
+        @file_path = File.expand_path(config.fetch('file_name'), File.dirname(config_file))
+        raise "File not found: #{@file_path}" unless File.exist?(@file_path)
+      end
 
       @config_env = config.fetch('environment', {})
       @kms_key_arn = config.fetch('kms_key_arn', ENV.fetch('LAMBDA_KMS_KEY_ARN', nil))

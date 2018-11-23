@@ -14,7 +14,8 @@ lambda_deploy [-c path/to/configuration.yml] deploy|release
 ```
 
 ### Deploy action
-The deploy action will upload the function to S3, and update the function to
+The deploy action will upload the function to S3, unless the `SKIP_UPLOAD`
+environment variable is set to `true`. It will then update the function to
 use the new code. If the environmental variable `TAG` is set it will also
 create a version and link that version to an alias named `TAG`.
 
@@ -71,7 +72,9 @@ environment:
   FOO: bar                    # optional: set some env vars for your Lambda
 ```
 
-* *file_name* is a path relative to the configuration file
+* *file_name* is the file_name needs to be the path relative to the configuration file.
+It is also used, together with the TAG to generate the S3 key, not that the path, if any will not
+be part of the key. So 'dist/lambda.zip' will result in a S3 key such as 'lambda-v3.zip'.
 * *project* must match the function name in the AWS console (the last value in
 the following example):
 ```

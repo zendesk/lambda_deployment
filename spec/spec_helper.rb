@@ -50,6 +50,13 @@ module HelperMethods
     ).and_return(nil)
   end
 
+  def stub_head_object(version)
+    expect_any_instance_of(Aws::S3::Client).to receive(:head_object).with(
+      bucket: 'my-test-bucket',
+      key: "example-#{version}.zip"
+    ).and_return(nil)
+  end
+
   def stub_update_function_configuration(env, key_arn = nil)
     env.map { |k, v| env[k] = "#{v}-encoded" } if key_arn
     expect_any_instance_of(Aws::Lambda::Client).to receive(:update_function_configuration).with(
